@@ -1,44 +1,60 @@
 package com.github.FireStoat3.VCFextractor;
 
+import java.util.ArrayList;
+
 public class Contact {
 
     //private parameters
-    private String number;
-    private String email;
-    private Address address;
+    private String name;
+    private ArrayList<String> number;
+    private ArrayList<String> email;
+    private String address;
 
     //methods
     public Contact()
     {
-        this.number="unknown";
-        this.email="unknown";
-        this.address=new Address();
+        this.name="unknown";
+        this.number=new ArrayList<>();
+        this.email=new ArrayList<>();
+        this.address="unknown";
     }
-    public Contact(String number,String email,Address address)
+    public Contact(String name,String number,String email,String address)
     {
+        this.name=name;
+        this.number=new ArrayList<>();
+        this.email=new ArrayList<>();
+        this.number.add(number);
+        this.email.add(email);
+        this.address=address;
+    }
+    public Contact(String name,ArrayList<String> number,ArrayList<String> email,String address)
+    {
+        this.name=name;
         this.number=number;
         this.email=email;
         this.address=address;
     }
-    public Contact(String number,String email,String state,String street,String city,String zip,String hn)
+
+    public String getName()
     {
-        this.number=number;
-        this.email=email;
-        this.address=new Address(state,street,city,zip,hn);
+        return name;
     }
 
-    public String getNumber()
+    public ArrayList<String> getNumber()
     {
+        //Return the phone number
         return number;
     }
 
-    public String getEmail()
+    public ArrayList<String> getEmail()
     {
+        //Return the email
         return email;
     }
 
-    public Address getAddress()
+    public String getAddress()
     {
+        //Return address
         return address;
     }
 }
