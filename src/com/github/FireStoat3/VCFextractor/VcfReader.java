@@ -1,13 +1,19 @@
 package com.github.FireStoat3.VCFextractor;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.io.File;
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class VcfReader {
     //private parameters
     private String filePath;
+    private String outputFilePath;
     private ArrayList<Contact> contacts;
     private int ncontacts;
     private boolean isReaded;
@@ -16,6 +22,15 @@ public class VcfReader {
     public VcfReader(String filePath)
     {
         this.filePath=filePath;
+        this.outputFilePath="./";
+        contacts=new ArrayList<>();
+        ncontacts=0;
+        isReaded=false;
+    }
+    public VcfReader(String filePath,String outputFilePath)
+    {
+        this.filePath=filePath;
+        this.outputFilePath=outputFilePath;
         contacts=new ArrayList<>();
         ncontacts=0;
         isReaded=false;
@@ -116,9 +131,81 @@ public class VcfReader {
         return contacts;
     }
 
+    public String getFilePath()
+    {
+        return filePath;
+    }
+
+    public String getOutputFilePath()
+    {
+        return outputFilePath;
+    }
+
+    public void setFilePath(String filePath)
+    {
+        this.filePath=filePath;
+        isReaded=false;
+    }
+
+    public void setOutputFilePath(String outputFilePath)
+    {
+        this.outputFilePath=outputFilePath;
+    }
+
     public boolean isReaded()
     {
         //Return true if the file has been readen, false if not
         return isReaded;
+    }
+
+    public void writeOutputFile(String name) throws IOException
+    {
+        File outputFile=new File(outputFilePath+name);
+        outputFile.createNewFile();
+        try(FileWriter ofw=new FileWriter(outputFile))
+        {
+            SimpleDateFormat sdf=new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+            ofw.write("EXPORTED CONTACTS"+String.format("%n"));
+            ofw.write("Time and date: "+sdf.format(new Date())+String.format("%n"));
+            ofw.write("Contacts:"+String.format("%n"));
+            Iterator<Contact> contactsIterator=contacts.iterator();
+            ArrayList<String> contactString=new ArrayList<>();
+            Iterator<String> contactStringIterator=contactString.iterator();
+            while(contactsIterator.hasNext())
+            {
+                Contact currentContact=contactsIterator.next();
+                ofw.write("-- Name --"+String.format("%n"));
+                ofw.write(currentContact.getName()+String.format("%n"));
+                ofw.write("-- Address --"+String.format("%n"));
+                ofw.write(currentContact.getAddress()+String.format("%n"));
+                ofw.write("-- Phone number --"+String.format("%n"));
+                contactString=currentContact.getNumber();
+                contactStringIterator=contactString.iterator();
+                if(contactString.isEmpty()==true)
+                {
+                    ofw.write("unknown"+String.format("%n"));
+                }
+                while(contactStringIterator.hasNext())
+                {
+                    ofw.write(contactStringIterator.next()+String.format("%n"));
+                }
+                ofw.write("-- Email --"+String.format("%n"));
+                contactString=currentContact.getEmail();
+                contactStringIterator=contactString.iterator();
+                if(contactString.isEmpty()==true)
+                {
+                    ofw.write("unknown"+String.format("%n"));
+                }
+                while(contactStringIterator.hasNext())
+                {
+                    ofw.write(contactStringIterator.next()+String.format("%n"));
+                }
+                ofw.write(String.format("%n")+String.format("%n"));
+            }
+        }
+        catch(IOException ioe)
+        {
+            throw ioe;
+        }
     }
 }

@@ -54,7 +54,7 @@ public class Contact {
 
     public String getAddress()
     {
-        //Return address
+        //Return the address
         return address;
     }
 }

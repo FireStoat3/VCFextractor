@@ -2,6 +2,7 @@ package com.github.FireStoat3.VCFextractor;
 
 import java.util.Scanner;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -38,6 +39,14 @@ public class Main {
                 System.out.printf("Email: %s%n",present_contact.getEmail());
             }
             System.out.printf("-------%n");
+            try
+            {
+                reader.writeOutputFile("outputtest.txt");
+            }
+            catch(IOException ioe)
+            {
+                System.out.printf("Error %n");
+            }
         }
     }
     
