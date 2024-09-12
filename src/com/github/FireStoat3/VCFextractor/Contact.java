@@ -37,6 +37,7 @@ public class Contact {
 
     public String getName()
     {
+        //Return name of the contact
         return name;
     }
 

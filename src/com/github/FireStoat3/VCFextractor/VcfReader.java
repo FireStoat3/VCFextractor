@@ -133,22 +133,26 @@ public class VcfReader {
 
     public String getFilePath()
     {
+        //Return current input file path
         return filePath;
     }
 
     public String getOutputFilePath()
     {
+        //return current output file path
         return outputFilePath;
     }
 
     public void setFilePath(String filePath)
     {
+        //set input file path to filePath
         this.filePath=filePath;
         isReaded=false;
     }
 
     public void setOutputFilePath(String outputFilePath)
     {
+        //Set output file path to outputFilePath
         this.outputFilePath=outputFilePath;
     }
 
@@ -160,6 +164,7 @@ public class VcfReader {
 
     public void writeOutputFile(String name) throws IOException
     {
+        //Write contacts info to a file in outputFilePath named name
         File outputFile=new File(outputFilePath+name);
         outputFile.createNewFile();
         try(FileWriter ofw=new FileWriter(outputFile))
