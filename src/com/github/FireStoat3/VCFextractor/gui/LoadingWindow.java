@@ -14,11 +14,10 @@ public class LoadingWindow implements Closeable {
     private Frame loadingFrame;
     private JLabel loadingInfo;
     private JProgressBar progressBar;
-    private VcfReader reader;
 
     public LoadingWindow(VcfReader reader,String labelText) throws IOException
     {
-        this.reader=reader;
+
         loadingFrame=new Frame("VcfExtractor",500,250);
         loadingFrame.setResizable(false);
         loadingFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -46,7 +45,6 @@ public class LoadingWindow implements Closeable {
 
     public LoadingWindow(VcfReader reader,String labelText,String outputFileName) throws IOException
     {
-        this.reader=reader;
         loadingFrame=new Frame("VcfExtractor",500,250);
         loadingFrame.setResizable(false);
         loadingFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
