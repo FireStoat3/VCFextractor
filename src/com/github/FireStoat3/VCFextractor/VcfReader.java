@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import javax.swing.JProgressBar;
+
 public class VcfReader {
     //private parameters
     private String filePath;
@@ -19,10 +21,10 @@ public class VcfReader {
     private boolean isReaded;
 
     //methods
-    public VcfReader(String filePath)
+    public VcfReader()
     {
-        this.filePath=filePath;
-        this.outputFilePath="./";
+        this.filePath="unknown";
+        this.outputFilePath="unknown";
         contacts=new ArrayList<>();
         ncontacts=0;
         isReaded=false;
@@ -57,6 +59,16 @@ public class VcfReader {
         {
             return 0;
         }
+    }
+
+    public void clear()
+    {
+        //Delete readed data
+        filePath="unknown";
+        outputFilePath="unknown";
+        contacts.clear();
+        ncontacts=0;
+        isReaded=false;
     }
 
     public void readFile() throws FileNotFoundException
@@ -116,7 +128,68 @@ public class VcfReader {
             }
             isReaded=true;
         }
+    }
 
+    public void readFile(JProgressBar progressBar) throws FileNotFoundException
+    {
+        //Read the vcf file and memorize its contacts in contacts ArrayList<Contact>
+        try(Scanner fileReader=new Scanner(new File(filePath)))
+        {
+            String readedLine="unknown",name="unknown",address="unknown";
+            ArrayList<String> number=new ArrayList<>(),email=new ArrayList<>();
+            boolean addrfound=false;
+            ncontacts=findContacts();
+            int counter=0;
+            
+            while(fileReader.hasNext())
+            {
+                readedLine=fileReader.nextLine();
+                if(readedLine.compareTo("END:VCARD")!=0)
+                {
+                    switch(readedLine)
+                    {
+                        case String s when s.contains("FN:"):
+                        {
+                            name=s.substring(3);
+                            break;
+                        }
+                        case String s when s.contains("ADR"):
+                        {
+                            if(addrfound==false)
+                            {
+                                address=s.substring(s.lastIndexOf(":")+1).replace(";"," ");
+                                addrfound=true;
+                            }
+                            break;
+                        }
+                        case String s when s.contains("TEL"):
+                        {
+                            number.add(s.substring(s.lastIndexOf(":")+1));
+                            break;
+                        }
+                        case String s when s.contains("EMAIL"):
+                        {
+                            email.add(s.substring(s.lastIndexOf(":")+1));
+                            break;
+                        }
+                        default: break;
+
+                    }
+                }
+                else
+                {
+                    contacts.add(new Contact(name,new ArrayList<>(number),new ArrayList<>(email),address));
+                    name="unknown";
+                    number.clear();
+                    email.clear();
+                    address="unknown";
+                    addrfound=false;
+                    counter+=1;
+                    progressBar.setValue(100*counter/ncontacts);
+                }
+            }
+            isReaded=true;
+        }
     }
 
     public int getNcontacts()
@@ -206,6 +279,60 @@ public class VcfReader {
                     ofw.write(contactStringIterator.next()+String.format("%n"));
                 }
                 ofw.write(String.format("%n")+String.format("%n"));
+            }
+        }
+        catch(IOException ioe)
+        {
+            throw ioe;
+        }
+    }
+    public void writeOutputFile(String name,JProgressBar progressbar) throws IOException
+    {
+        //Write contacts info to a file in outputFilePath named name
+        File outputFile=new File(outputFilePath+name);
+        outputFile.createNewFile();
+        try(FileWriter ofw=new FileWriter(outputFile))
+        {
+            int counter=0;
+            SimpleDateFormat sdf=new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+            ofw.write("EXPORTED CONTACTS"+String.format("%n"));
+            ofw.write("Time and date: "+sdf.format(new Date())+String.format("%n"));
+            ofw.write("Contacts:"+String.format("%n"));
+            Iterator<Contact> contactsIterator=contacts.iterator();
+            ArrayList<String> contactString=new ArrayList<>();
+            Iterator<String> contactStringIterator=contactString.iterator();
+            while(contactsIterator.hasNext())
+            {
+                Contact currentContact=contactsIterator.next();
+                ofw.write("-- Name --"+String.format("%n"));
+                ofw.write(currentContact.getName()+String.format("%n"));
+                ofw.write("-- Address --"+String.format("%n"));
+                ofw.write(currentContact.getAddress()+String.format("%n"));
+                ofw.write("-- Phone number --"+String.format("%n"));
+                contactString=currentContact.getNumber();
+                contactStringIterator=contactString.iterator();
+                if(contactString.isEmpty()==true)
+                {
+                    ofw.write("unknown"+String.format("%n"));
+                }
+                while(contactStringIterator.hasNext())
+                {
+                    ofw.write(contactStringIterator.next()+String.format("%n"));
+                }
+                ofw.write("-- Email --"+String.format("%n"));
+                contactString=currentContact.getEmail();
+                contactStringIterator=contactString.iterator();
+                if(contactString.isEmpty()==true)
+                {
+                    ofw.write("unknown"+String.format("%n"));
+                }
+                while(contactStringIterator.hasNext())
+                {
+                    ofw.write(contactStringIterator.next()+String.format("%n"));
+                }
+                ofw.write(String.format("%n")+String.format("%n"));
+                counter+=1;
+                progressbar.setValue(ncontacts*100/counter);
             }
         }
         catch(IOException ioe)
