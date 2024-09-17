@@ -101,7 +101,7 @@ public class MainPanel extends JPanel implements ActionListener{
             }
         }
 
-        if(e.getSource()==readButton)
+        if(e.getSource()==readButton && !reader.isReaded())
         {
             this.setVisible(false);
             try(LoadingWindow lw=new LoadingWindow(reader,"Reading contacts,please wait...");)
