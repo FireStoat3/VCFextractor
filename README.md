@@ -9,13 +9,11 @@
 
 **1. Compile the .java files**
 - Open a terminal window and move to the root of the project
-- Create the directories for storing .class files like this:
-   `/bin/com/github/FireStoat3/VCFextractor`
 - From the root of the project execute the following command to compile the files:
   
    ~~~
    
-   javac ./src/com/github/FireStoat3/VCFextractor/*.java ./src/com/github/FireStoat3/VCFextractor/gui/*.java -d ./bin/com/github/FireStoat3/VCFextractor/
+   javac ./src/com/github/FireStoat3/VCFextractor/*.java ./src/com/github/FireStoat3/VCFextractor/gui/*.java -d ./bin/
    
    ~~~
 **2. Create the .jar file**
@@ -24,7 +22,7 @@
   
   ~~~
 
-  jar -c -f VCFextractor.jar -m ./META_INF/MANIFEST.MF -C ./bin/com/github/FireStoat3/VCFextractor/ ./
+  jar -c -f VCFextractor.jar -m ./META_INF/MANIFEST.MF -C ./bin ./com/github/FireStoat3/
 
   ~~~
 
