@@ -132,6 +132,10 @@ public class MainPanel extends JPanel implements ActionListener{
                     reader.setFilePath(filePath);
                     readButton.doClick();
                 }
+                else
+                {
+                    this.setVisible(true);
+                }
             }
         }
 
