@@ -26,7 +26,7 @@ import com.github.FireStoat3.VCFextractor.gui.MainPanel;
 public class Main {
     public static void main(String args[])
     {
-        JOptionPane.showMessageDialog(null,"VCFextractor  Copyright (C) 2024"+String.format("%n")+"This program comes with ABSOLUTELY NO WARRANTY"+String.format("%n")+"This is free software, and you are welcome to redistribute it under certain conditions, view the license (GNU General Public License v3) for more information","Welcome", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null,"VCFextractor Copyright (C) 2024"+String.format("%n")+"This program comes with ABSOLUTELY NO WARRANTY"+String.format("%n")+"This is free software, and you are welcome to redistribute it under certain conditions, view the license (GNU General Public License v3) for more information","Welcome", JOptionPane.INFORMATION_MESSAGE);
         Frame mainFrame=new Frame("VCF Extractor",270,350);
         mainFrame.add(new MainPanel(new VcfReader()));
         mainFrame.setLayout(null);

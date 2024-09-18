@@ -101,21 +101,37 @@ public class MainPanel extends JPanel implements ActionListener{
             }
         }
 
-        if(e.getSource()==readButton && !reader.isReaded())
+        if(e.getSource()==readButton)
         {
             this.setVisible(false);
-            try(LoadingWindow lw=new LoadingWindow(reader,"Reading contacts,please wait...");)
+            if(!reader.isReaded())
             {
-                exportButton.setEnabled(true);
+                try(LoadingWindow lw=new LoadingWindow(reader,"Reading contacts,please wait...");)
+                {
+                    JOptionPane.showMessageDialog(null,"File has been ridden!","Read Data", JOptionPane.INFORMATION_MESSAGE);
+                    exportButton.setEnabled(true);
+                }
+                catch(IOException ioe)
+                {
+                    exportButton.setEnabled(false);
+                    JOptionPane.showMessageDialog(null, "Error reading file: wrong or corrupted file!","Read Data", JOptionPane.ERROR_MESSAGE);
+                }
+                finally
+                {
+                    this.setVisible(true);
+                }
             }
-            catch(IOException ioe)
+            else
             {
-                exportButton.setEnabled(false);
-                JOptionPane.showMessageDialog(null, "Error reading file: wrong or corrupted file!","Error reading file", JOptionPane.ERROR_MESSAGE);
-            }
-            finally
-            {
-                this.setVisible(true);
+                int answer=JOptionPane.showConfirmDialog(null,"The file has been ridden. Do you want to read it again?","Read Data", JOptionPane.YES_NO_OPTION);
+                if(answer==0)
+                {
+                    //Yes has been selected
+                    String filePath=reader.getFilePath();
+                    reader.clear();
+                    reader.setFilePath(filePath);
+                    readButton.doClick();
+                }
             }
         }
 
