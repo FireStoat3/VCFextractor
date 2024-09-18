@@ -47,7 +47,7 @@ There are two ways for running the program:
 
 ## How to use the program?
 > [!CAUTION]
-> During the use of he program a window with a progress bar could open and close automatically.
+> During the use of the program a window with a progress bar could open and close automatically.
 > If the vCard file has very few contacts the window will open and close very quickly
  
 Using the program is very simple, you just need to do five things:
